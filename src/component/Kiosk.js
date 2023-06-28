@@ -7,6 +7,20 @@ const product = [
     {pno : 4, pname : 'Latte' , price : 9000 },
 ]
 
+// 총액
+const getTotal = (arr) => {
+
+    if(!arr || arr.length===0){
+        return 0
+    } 
+    let sum = 0
+
+    for(const ele of arr){
+        sum += (ele.price * ele.qty)
+    }
+    return sum
+}
+
 const Kiosk = () => {
 
     // items라는 변수 , setItems 라는 함수를 요소로 가지는 배열 생성
@@ -35,6 +49,31 @@ const Kiosk = () => {
 
 }
 
+    const handleClickQty = (pno , amount) => {
+        console.log("pno" , pno , "amount" , amount)
+        
+        // times 배열에서 pno 속성 값이 pno 변수와 일치하는 첫번째 요소 참조
+        const target = items.filter(item => item.pno === pno)[0]
+
+        console.log(target)
+
+        // increse
+        if(amount === 1){
+            target.qty += 1
+            setItems([...items])
+        } else{
+            // 삭제처리
+            if(target.qty === 1){
+                setItems(items.filter(ele => ele.pno !== pno))
+            } else{
+                target.qty -= 1
+                setItems([...items])
+            }
+        }
+
+
+    }
+
 
 
     return ( 
@@ -59,12 +98,19 @@ const Kiosk = () => {
                         <div>{item.price}</div>
                     </div>
                     <div className="flex justify-center text-2xl">
-                    <button className="m-1 rounded-lg bg-emerald-300 p-4">+</button>
+                    <button 
+                    onClick={() => handleClickQty(item.pno,1)}
+                    className="m-1 rounded-lg bg-emerald-300 p-4">+</button>
                     <p className="m-2 p-2">{item.qty}</p>
-                    <button className="m-1 rounded-lg bg-emerald-300 p-4">-</button>
+                    <button 
+                    onClick={() => handleClickQty(item.pno,-1)}
+                    className="m-1 rounded-lg bg-emerald-300 p-4">-</button>
                     </div>
                    </li>)}
                 </ul>
+                <div className="bg-blue-400 text-white text-3xl">
+                    Total {getTotal(items)}
+                </div>
             </div>
         </div>
      );
